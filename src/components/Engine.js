@@ -1,9 +1,6 @@
 import Render from './Render';
 import Scene from './Scene';
 
-
-
-
 export default class Engine{
 	constructor(ctx){
 		this.ctx = ctx;
@@ -13,7 +10,19 @@ export default class Engine{
 		this.render = new Render( this.ctx );
 	}
 
-	animate = (render) => {
 
-	}
+	startRender = () => {
+
+        this.render.start();
+
+	};
+
+
+    addRenderObject = (object, position) => {
+
+        this.scene.add(object, position);
+
+        this.render.renderObjects( this.scene.sceneObjects );
+
+	};
 }

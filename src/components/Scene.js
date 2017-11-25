@@ -6,7 +6,11 @@ export default class Scene{
 	sceneObjects = [];
 
 
-	add = sceneObject => this.sceneObjects.push( sceneObject );
+	add = (sceneObject, position) => {
+
+		position ? this.sceneObjects.splice( position, 0, sceneObject ) : this.sceneObjects.push( sceneObject );
+
+    };
 
 
 	remove = sceneObject => this.sceneObjects = this.sceneObjects.filter( obj => obj === sceneObject );
