@@ -36,6 +36,10 @@ export default class Render{
 	};
 
 
+	/**
+	 * Функция рендера, которая определяет какой метод рендера вызывать
+	 * @param rObj
+	 */
 	renderObject = rObj => {
 
 		if( rObj instanceof Geometry ){
@@ -47,36 +51,56 @@ export default class Render{
 	};
 
 
-	renderGeometry = rGeometry => {
+	/**
+	 * Рендер свойст базового объекта. В этом методе холст не очищается
+	 * @param baseObject
+	 */
+	renderBaseObject = baseObject => {
+		let {ctx} = this;
 
+		if(baseObject.rotate) ctx.rotate((Math.PI/180) * baseObject.rotate);
+		if(baseObject.alpha) ctx.globalAlpha = baseObject.alpha;
+
+	};
+
+
+	/**
+	 * Рендер геометрии
+	 * @param rGeometry
+	 */
+	renderGeometry = rGeometry => {
 		let {ctx} = this;
 
 		ctx.save();
 
-        ctx.fillStyle = rGeometry.fillRect[4] || rGeometry.fillStyle;
-        ctx.globalAlpha = rGeometry.alpha;
-        ctx.translate(rGeometry.x, rGeometry.y);
-        if(rGeometry.rotate) ctx.rotate((Math.PI/180) * rGeometry.rotate);
-        ctx.fillRect( -rGeometry.x/2, -rGeometry.y/2, rGeometry.fillRect[2], rGeometry.fillRect[3] );
-        ctx.fillStyle = rGeometry.strokeRect[4] || rGeometry.fillStyle;
-        ctx.strokeRect( -rGeometry.x/2, -rGeometry.y/2, rGeometry.strokeRect[2], rGeometry.strokeRect[3] );
+		if( rGeometry.rotationPoint ) {
+			ctx.translate(rGeometry.rotationPoint.x, rGeometry.rotationPoint.y)
+		} else if( rGeometry.position ) {
+			ctx.translate(rGeometry.x, rGeometry.y);
+		} else {
+			rGeometry.position = {x: 0, y: 0};
+			ctx.translate(0, 0)
+		}
 
-		// ctx.fillStyle = rGeometry.fill;
-		// ctx.globalAlpha = 0.5;
-		// ctx.translate(rGeometry.x, rGeometry.y);
-		// ctx.rotate((Math.PI/180) * rGeometry.angle);
-		// ctx.scale(rGeometry.scale, rGeometry.scale);
-		// ctx.fillRect(-rGeometry.w/2, -rGeometry.h/2, rGeometry.w, rGeometry.h);
-        //
-		// // border
-		// ctx.fillStyle = rGeometry.border;
-		// ctx.strokeRect(-rGeometry.w/2, -rGeometry.h/2, rGeometry.w, rGeometry.h);
-        //
-		// rGeometry.angle += rGeometry.angleSpeed;
-        //
-		// if(rGeometry.scale >= 2) rGeometry.scaleSpeed = -rGeometry.scaleSpeed;
-		// if(rGeometry.scale <= 0.5) rGeometry.scaleSpeed = Math.abs(rGeometry.scaleSpeed);
-		// rGeometry.scale += rGeometry.scaleSpeed;
+		this.renderBaseObject( rGeometry );
+
+		rGeometry.shape.forEach( item => {
+
+			if(item.type === 'fillStyle') ctx[ item.type ] = item.value;
+
+			if(item.type === 'strokeStyle') ctx[ item.type ] = item.value;
+
+			if(item.type === 'fillRect') ctx[ item.type ](
+				rGeometry.rotationPoint ? rGeometry.x - rGeometry.rotationPoint.x : 0,
+				rGeometry.rotationPoint ? rGeometry.y - rGeometry.rotationPoint.y : 0,
+				item.value[2], item.value[3] );
+
+			if(item.type === 'strokeRect') ctx[ item.type ](
+				rGeometry.rotationPoint ? rGeometry.x - rGeometry.rotationPoint.x : 0,
+				rGeometry.rotationPoint ? rGeometry.y - rGeometry.rotationPoint.y : 0,
+				item.value[2], item.value[3] );
+
+		});
 
 		ctx.restore();
 

@@ -4,30 +4,70 @@ export default class Geometry extends baseRenderObject{
 	constructor(){
 		super();
 
+		this._shape = [];
+
 	}
 
 
-	get fillStyle(){
-        return this._fillStyle;
+	startShape(){
+        this._shape.length = 0;
+
+        return this;
 	}
-	set fillStyle( value ){
-		this._fillStyle = value;
+
+	get shape(){
+		return this._shape;
 	}
 
 
-	get fillRect(){
-        return this._fillRect;
-	}
-	set fillRect( value ){
-		this._fillRect = value;
+
+    /**
+	 * Задаёт цвет
+     * @returns {*}
+     */
+	fillStyle( value ){
+        this.shape.push({type: 'fillStyle', value: value});
+
+		return this;
 	}
 
 
-	get strokeRect(){
-        return this._strokeRect;
-	}
-	set strokeRect( value ){
-		this._strokeRect = value;
+	/**
+	 * Задаёт цвет контура
+     * @returns {*}
+     */
+	strokeStyle( value ){
+        this.shape.push({type: 'strokeStyle', value: value});
+
+		return this;
 	}
 
+
+	/**
+     * Метод рисует прямоугольный залитый квадрат
+     * @returns {*}
+     */
+	fillRect( value ){
+        this.shape.push({type: 'fillRect', value: value});
+
+        return this;
+	}
+
+
+    /**
+	 * Метод рисует прямоугольный квадрат-рамку
+     * @returns {*}
+     */
+	strokeRect( value ){
+        this.shape.push({type: 'strokeRect', value: value});
+
+        return this;
+	}
+
+
+	setRotationPoint( value ){
+		this.rotationPoint = value;
+
+		return this;
+	}
 }
