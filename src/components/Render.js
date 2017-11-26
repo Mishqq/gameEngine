@@ -1,13 +1,14 @@
-import Square from './rObjects/Square';
+import Geometry from './rObjects/Geometry';
 
 export default class Render{
 	constructor(ctx){
 		this.ctx = ctx;
+
+        this.rObjects = [];
 	}
 
-	start = rObjects => {
+	start = () => {
 		this.process = true;
-		this.rObjects = rObjects;
 
 		this.animation();
 	};
@@ -15,6 +16,11 @@ export default class Render{
 
 	stop = () => {
 		this.process = false;
+	};
+
+
+	renderObjects = objectsArr => {
+        this.rObjects = objectsArr;
 	};
 
 
@@ -30,39 +36,71 @@ export default class Render{
 	};
 
 
+	/**
+	 * Функция рендера, которая определяет какой метод рендера вызывать
+	 * @param rObj
+	 */
 	renderObject = rObj => {
 
-		if( rObj instanceof Square ){
+		if( rObj instanceof Geometry ){
 
-			this.renderSquare( rObj );
+			this.renderGeometry( rObj );
 
 		}
 
 	};
 
 
-	renderSquare = rSquare => {
+	/**
+	 * Рендер свойст базового объекта. В этом методе холст не очищается
+	 * @param baseObject
+	 */
+	renderBaseObject = baseObject => {
+		let {ctx} = this;
 
+		if(baseObject.rotate) ctx.rotate((Math.PI/180) * baseObject.rotate);
+		if(baseObject.alpha) ctx.globalAlpha = baseObject.alpha;
+
+	};
+
+
+	/**
+	 * Рендер геометрии
+	 * @param rGeometry
+	 */
+	renderGeometry = rGeometry => {
 		let {ctx} = this;
 
 		ctx.save();
 
-		ctx.fillStyle = rSquare.fill;
-		ctx.globalAlpha = 0.5;
-		ctx.translate(rSquare.x, rSquare.y);
-		ctx.rotate((Math.PI/180) * rSquare.angle);
-		ctx.scale(rSquare.scale, rSquare.scale);
-		ctx.fillRect(-rSquare.w/2, -rSquare.h/2, rSquare.w, rSquare.h);
+		if( rGeometry.rotationPoint ) {
+			ctx.translate(rGeometry.rotationPoint.x, rGeometry.rotationPoint.y)
+		} else if( rGeometry.position ) {
+			ctx.translate(rGeometry.x, rGeometry.y);
+		} else {
+			rGeometry.position = {x: 0, y: 0};
+			ctx.translate(0, 0)
+		}
 
-		// border
-		ctx.fillStyle = rSquare.border;
-		ctx.strokeRect(-rSquare.w/2, -rSquare.h/2, rSquare.w, rSquare.h);
+		this.renderBaseObject( rGeometry );
 
-		rSquare.angle += rSquare.angleSpeed;
+		rGeometry.shape.forEach( item => {
 
-		if(rSquare.scale >= 2) rSquare.scaleSpeed = -rSquare.scaleSpeed;
-		if(rSquare.scale <= 0.5) rSquare.scaleSpeed = Math.abs(rSquare.scaleSpeed);
-		rSquare.scale += rSquare.scaleSpeed;
+			if(item.type === 'fillStyle') ctx[ item.type ] = item.value;
+
+			if(item.type === 'strokeStyle') ctx[ item.type ] = item.value;
+
+			if(item.type === 'fillRect') ctx[ item.type ](
+				rGeometry.rotationPoint ? rGeometry.x - rGeometry.rotationPoint.x : 0,
+				rGeometry.rotationPoint ? rGeometry.y - rGeometry.rotationPoint.y : 0,
+				item.value[2], item.value[3] );
+
+			if(item.type === 'strokeRect') ctx[ item.type ](
+				rGeometry.rotationPoint ? rGeometry.x - rGeometry.rotationPoint.x : 0,
+				rGeometry.rotationPoint ? rGeometry.y - rGeometry.rotationPoint.y : 0,
+				item.value[2], item.value[3] );
+
+		});
 
 		ctx.restore();
 
