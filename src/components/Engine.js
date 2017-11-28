@@ -1,7 +1,9 @@
 import Render from './Render';
 import Scene from './Scene';
+import Container from './rObjects/Container';
+import Geometry from './rObjects/Geometry';
 
-export default class Engine{
+class Engine {
 	constructor(ctx){
 		this.ctx = ctx;
 
@@ -11,18 +13,35 @@ export default class Engine{
 	}
 
 
-	startRender = () => {
+	startRender = sceneName => {
 
-        this.render.start();
+        this.render.start( sceneName ? this.scene.scenes[ sceneName ] : this.scene.scenes.default );
+
+	};
+
+
+    addScene = scene => {
+
+        this.scene.addScene( scene );
 
 	};
 
 
-    addRenderObject = (object, position) => {
+    switchScene = sceneName => {
 
-        this.scene.add(object, position);
+    	this.render.setRenderingScene( this.scene.scenes[ sceneName ] );
 
-        this.render.renderObjects( this.scene.sceneObjects );
+    };
 
-	};
+
+    get allSenes(){
+    	return this.scene.scenes;
+    };
+
+
+    get currentScene(){
+    	return this.render.getRenderingScene()
+    }
 }
+
+export {Engine, Container, Geometry};

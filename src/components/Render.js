@@ -1,36 +1,71 @@
 import Geometry from './rObjects/Geometry';
+import Container from './rObjects/Container';
 
 export default class Render{
 	constructor(ctx){
 		this.ctx = ctx;
 
-        this.rObjects = [];
+		this._renderingScene = undefined;
 	}
 
-	start = () => {
-		this.process = true;
+
+	/**
+	 *
+	 * @param scene
+	 */
+	start = scene => {
+		this._renderingScene = scene;
+
+		this.rendering = true;
 
 		this.animation();
 	};
 
 
+	/**
+	 *
+	 * @param scene
+	 */
+	setRenderingScene( scene ){
+		this._renderingScene = scene;
+	}
+
+
+	/**
+	 *
+	 * @returns {undefined|*}
+	 */
+	getRenderingScene(){
+		return this._renderingScene;
+	}
+
+
+	/**
+	 *
+	 */
 	stop = () => {
-		this.process = false;
+		this.rendering = false;
 	};
 
 
-	renderObjects = objectsArr => {
-        this.rObjects = objectsArr;
+	/**
+	 *
+	 * @param scene
+	 */
+	renderScene = scene => {
+
+		this.renderObject( scene );
+
 	};
 
 
+	/**
+	 *
+	 */
 	animation = () => {
 		this.ctx.clearRect(0, 0, 500, 500);
-		this.rObjects.forEach( obj => {
 
-			this.renderObject( obj );
-
-		});
+		this.renderScene( this._renderingScene );
 
  	    this.timeoutId = requestAnimationFrame( () => this.animation() );
 	};
@@ -47,6 +82,8 @@ export default class Render{
 			this.renderGeometry( rObj );
 
 		}
+
+		rObj.children.forEach( child => this.renderObject( child ) );
 
 	};
 
@@ -70,7 +107,7 @@ export default class Render{
 	 */
 	renderGeometry = rGeometry => {
 		let {ctx} = this;
-
+		
 		ctx.save();
 
 		if( rGeometry.rotationPoint ) {
