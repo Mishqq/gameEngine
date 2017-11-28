@@ -1,17 +1,19 @@
+import Container from './rObjects/Container';
+
 export default class Scene{
 	constructor(){
 
+		this.scenes = {
+			default: new Container()
+		};
+
 	}
 
-	sceneObjects = [];
 
+	addScene = ( scene ) => {
 
-	add = (sceneObject, position) => {
-
-		position ? this.sceneObjects.splice( position, 0, sceneObject ) : this.sceneObjects.push( sceneObject );
+		Object.assign( this.scenes, scene );
 
     };
 
-
-	remove = sceneObject => this.sceneObjects = this.sceneObjects.filter( obj => obj === sceneObject );
 }
