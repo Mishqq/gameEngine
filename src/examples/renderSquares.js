@@ -1,9 +1,4 @@
-import Engine from '../components/Engine';
 import Geometry from '../components/rObjects/Geometry';
-
-const ctx = document.querySelector('#squares').getContext('2d');
-
-const engine = new Engine(ctx);
 
 let g1 = new Geometry();
 g1.position = {x: 100, y: 100};
@@ -45,15 +40,13 @@ g3
 
 
 let rotate = () => {
-	g1.rotate += 1;
-	g2.rotate += 1;
-	g3.rotate += 1;
+	g1.rotate -= 0.1;
+	g2.rotate += 0.1;
+	g3.rotate += 0.1;
 	requestAnimationFrame( rotate );
 };
+
 rotate();
 
-engine.render.start();
 
-engine.addRenderObject( g1 );
-engine.addRenderObject( g2 );
-engine.addRenderObject( g3 );
+export {g1, g2, g3};

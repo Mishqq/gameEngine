@@ -1,7 +1,20 @@
-export default class baseRenderObject{
+export default class baseRenderObject {
     constructor(){
+        this.rotate = 0;
 
+        this.children = [];
     }
+
+
+    addChild = (object, position) => {
+        object.parent = this;
+
+	    position ? this.children.splice( position, 0, object ) : this.children.push( object );
+    };
+
+    removeChild = object => {
+      this.children = this.children.filter( child => object !== child );
+    };
 
 
     get x(){
