@@ -1,4 +1,4 @@
-import Geometry from '../components/rObjects/Geometry';
+import Geometry from '../components/shapes/Geometry';
 
 let g1 = new Geometry();
 g1.position = {x: 100, y: 100};

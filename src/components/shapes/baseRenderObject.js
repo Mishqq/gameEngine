@@ -1,5 +1,9 @@
-export default class baseRenderObject {
+import EventEmitter from '../utils/EventEmitter';
+
+export default class baseRenderObject extends EventEmitter {
     constructor(){
+        super();
+
         this.rotate = 0;
 
         this.children = [];
@@ -71,5 +75,10 @@ export default class baseRenderObject {
     }
     set alpha( value ){
         this._alpha = value;
+    }
+
+
+    isPointInPath(){
+
     }
 }
