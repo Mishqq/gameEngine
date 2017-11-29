@@ -1,4 +1,4 @@
-import Container from './rObjects/Container';
+import Container from './shapes/Container';
 
 export default class Scene{
 	constructor(){

@@ -1,6 +1,6 @@
 import baseRenderObject from './baseRenderObject';
 
-export default class Geometry extends baseRenderObject{
+export default class Geometry extends baseRenderObject {
 	constructor(){
 		super();
 
@@ -19,6 +19,13 @@ export default class Geometry extends baseRenderObject{
 		return this._shape;
 	}
 
+
+	get interactive(){
+		return this._interactive;
+	}
+	set interactive( value ){
+		this._interactive = value;
+	}
 
 
     /**
@@ -69,5 +76,11 @@ export default class Geometry extends baseRenderObject{
 		this.rotationPoint = value;
 
 		return this;
+	}
+
+
+	isPointInPath(x, y){
+		this._checkPath = true;
+		this._eventCoordinates = {x, y};
 	}
 }
