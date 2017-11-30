@@ -10,16 +10,11 @@ const engine = new Engine(ctx);
 engine.startRender();
 
 let allScenes = engine.allSenes;
-g1.interactive = true;
-g2.interactive = true;
-g3.interactive = true;
 
 allScenes.default.addChild( g1 );
-g1.on('click', data => {
-	console.log('⇒ По мне кликнули сука!', data);
-});
-// g1.addChild( g2 );
-// allScenes.default.addChild( g3 );
+allScenes.default.addChild( g2 );
+allScenes.default.addChild( g3 );
+
 
 let sceneSwitcher = document.querySelectorAll('.sceneSwitcher li');
 

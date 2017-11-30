@@ -1,4 +1,6 @@
-export default class EventEmitter{
+import EventManager from './EventManager';
+
+export default class EventEmitter {
 	constructor(){
 
 		this._observers = new Map();
@@ -46,9 +48,11 @@ export default class EventEmitter{
 
 		let contextObservers = this._observers.get( this );
 
+		if(!contextObservers) return false;
+
 		let contextSubscribers = contextObservers[ eventName ];
 
-		if(contextSubscribers) contextSubscribers.forEach( sub => sub( Object.assign({type: eventName}, data) ));
+		contextSubscribers.forEach( sub => sub( Object.assign({type: eventName}, data) ));
 
 	};
 }
