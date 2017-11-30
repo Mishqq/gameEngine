@@ -20,6 +20,7 @@ class Engine {
 		let _ctx = this;
 
 		for(let eventName in EVENTS.interactive){
+			console.log('⇒ EVENTS.interactive[ eventName ]', EVENTS.interactive[eventName]);
 			this.ctx.canvas.addEventListener(EVENTS.interactive[ eventName ], _ctx.eventMapHandler);
 		}
 
@@ -43,6 +44,25 @@ class Engine {
 			checkPoint( currentScene );
 
 			callStack.forEach( interactiveChild => interactiveChild.isPointInPath(event.layerX, event.layerY) )
+
+		} else if(event.type === EVENTS.interactive.move){
+
+			let currentScene = this.render.getRenderingScene();
+
+			let callStack = [];
+			let checkPoint = (object) => {
+				object.children.forEach( child => {
+
+					if( child.interactive ) callStack.push( child );
+
+					if( child.children ) checkPoint( child )
+
+				})
+			};
+			checkPoint( currentScene );
+
+			callStack.forEach( interactiveChild => interactiveChild.isPointInPath(event.layerX, event.layerY) )
+
 		}
 	};
 

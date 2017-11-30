@@ -1,6 +1,8 @@
 const EVENTS = {
 	interactive : {
-		click: 'click'
+		click: 'click',
+		// focus: 'mouseover',
+		// move: 'mousemove',
 	}
 };
 

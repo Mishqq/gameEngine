@@ -101,13 +101,9 @@ export default class Render {
 	};
 
 
-	/**
-	 * Рендер геометрии
-	 * @param rGeometry
-	 */
 	renderGeometry = rGeometry => {
 		let {ctx} = this;
-		
+
 		ctx.save();
 
 		if( rGeometry.rotationPoint ) {
@@ -121,30 +117,18 @@ export default class Render {
 
 		this.renderBaseObject( rGeometry );
 
-		rGeometry.shape.forEach( item => {
+		rGeometry.shape.forEach( ctxCommand => {
+			let {pathCommand, args, type} = ctxCommand;
 
-			if(item.type === 'fillStyle') ctx[ item.type ] = item.value;
-
-			if(item.type === 'strokeStyle') ctx[ item.type ] = item.value;
-
-			// if(item.type === 'fillRect') ctx[ item.type ](
-			// 	rGeometry.rotationPoint ? rGeometry.x - rGeometry.rotationPoint.x : 0,
-			// 	rGeometry.rotationPoint ? rGeometry.y - rGeometry.rotationPoint.y : 0,
-			// 	item.value[2], item.value[3] );
-
-			if(item.type === 'fillRect') {
-				ctx.rect(
-					rGeometry.rotationPoint ? rGeometry.x - rGeometry.rotationPoint.x : 0,
-					rGeometry.rotationPoint ? rGeometry.y - rGeometry.rotationPoint.y : 0,
-					item.value[2], item.value[3] );
-				ctx.fill();
+			switch( type ) {
+				case ('function'):
+					ctx[ pathCommand ].apply(ctx, args);
+					break;
+				case ('setter'):
+					ctx[ pathCommand ] = args[0];
+					break;
+				default:
 			}
-
-			if(item.type === 'strokeRect') ctx[ item.type ](
-				rGeometry.rotationPoint ? rGeometry.x - rGeometry.rotationPoint.x : 0,
-				rGeometry.rotationPoint ? rGeometry.y - rGeometry.rotationPoint.y : 0,
-				item.value[2], item.value[3] );
-
 		});
 
 		if(rGeometry._checkPath){
@@ -152,9 +136,8 @@ export default class Render {
 			if(result) rGeometry.emit('click', {});
 			rGeometry._checkPath = false;
 		}
-		ctx.closePath();
 
 		ctx.restore();
 
-	}
+	};
 }
