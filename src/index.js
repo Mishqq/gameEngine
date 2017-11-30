@@ -7,19 +7,14 @@ const canvas = document.querySelector('#squares');
 const ctx = canvas.getContext('2d');
 const engine = new Engine(ctx);
 
-
-
 engine.startRender();
-
-engine.addScene( {sceneOne: new Container()} );
-engine.addScene( {sceneTwo: new Container()} );
 
 let allScenes = engine.allSenes;
 
 allScenes.default.addChild( g1 );
+allScenes.default.addChild( g2 );
+allScenes.default.addChild( g3 );
 
-allScenes.sceneOne.addChild( g2 );
-allScenes.sceneOne.addChild( g3 );
 
 let sceneSwitcher = document.querySelectorAll('.sceneSwitcher li');
 
@@ -29,5 +24,3 @@ sceneSwitcher.forEach( item => {
 		engine.switchScene( sceneName );
 	});
 });
-
-

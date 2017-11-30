@@ -1,7 +1,7 @@
-import Geometry from './rObjects/Geometry';
-import Container from './rObjects/Container';
+import Geometry from './shapes/Geometry';
+import Container from './shapes/Container';
 
-export default class Render{
+export default class Render {
 	constructor(ctx){
 		this.ctx = ctx;
 
@@ -67,7 +67,7 @@ export default class Render{
 
 		this.renderScene( this._renderingScene );
 
- 	    this.timeoutId = requestAnimationFrame( () => this.animation() );
+ 	    if(this.rendering) this.timeoutId = requestAnimationFrame( () => this.animation() );
 	};
 
 
@@ -101,13 +101,9 @@ export default class Render{
 	};
 
 
-	/**
-	 * Рендер геометрии
-	 * @param rGeometry
-	 */
 	renderGeometry = rGeometry => {
 		let {ctx} = this;
-		
+
 		ctx.save();
 
 		if( rGeometry.rotationPoint ) {
@@ -121,25 +117,27 @@ export default class Render{
 
 		this.renderBaseObject( rGeometry );
 
-		rGeometry.shape.forEach( item => {
+		rGeometry.shape.forEach( ctxCommand => {
+			let {pathCommand, args, type} = ctxCommand;
 
-			if(item.type === 'fillStyle') ctx[ item.type ] = item.value;
-
-			if(item.type === 'strokeStyle') ctx[ item.type ] = item.value;
-
-			if(item.type === 'fillRect') ctx[ item.type ](
-				rGeometry.rotationPoint ? rGeometry.x - rGeometry.rotationPoint.x : 0,
-				rGeometry.rotationPoint ? rGeometry.y - rGeometry.rotationPoint.y : 0,
-				item.value[2], item.value[3] );
-
-			if(item.type === 'strokeRect') ctx[ item.type ](
-				rGeometry.rotationPoint ? rGeometry.x - rGeometry.rotationPoint.x : 0,
-				rGeometry.rotationPoint ? rGeometry.y - rGeometry.rotationPoint.y : 0,
-				item.value[2], item.value[3] );
-
+			switch( type ) {
+				case ('function'):
+					ctx[ pathCommand ].apply(ctx, args);
+					break;
+				case ('setter'):
+					ctx[ pathCommand ] = args[0];
+					break;
+				default:
+			}
 		});
+
+		if(rGeometry._checkPath){
+			let result = ctx.isPointInPath( rGeometry._eventCoordinates.x, rGeometry._eventCoordinates.y );
+			if(result) rGeometry.emit('click', {});
+			rGeometry._checkPath = false;
+		}
 
 		ctx.restore();
 
-	}
+	};
 }
