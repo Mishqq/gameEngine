@@ -1,8 +1,10 @@
 import Render from './Render';
 import Scene from './Scene';
+import sceneBuilder from './sceneBuilder';
 import {EVENTS} from './defs/defs';
 import Container from './shapes/Container';
 import Geometry from './shapes/Geometry';
+import InteractiveManager from './utils/InteractiveManager';
 
 class Engine {
 	constructor(ctx){
@@ -12,6 +14,10 @@ class Engine {
 
 		this.render = new Render( this.ctx );
 
+		this.sceneBuilder = sceneBuilder;
+
+		this.intManager = new InteractiveManager(this.ctx, this.render, ()=>this.render.getRenderingScene());
+
 		this.addEventHandlers();
 	}
 
@@ -19,10 +25,9 @@ class Engine {
 	addEventHandlers = () => {
 		let _ctx = this;
 
-		for(let eventName in EVENTS.interactive){
-			console.log('⇒ EVENTS.interactive[ eventName ]', EVENTS.interactive[eventName]);
-			this.ctx.canvas.addEventListener(EVENTS.interactive[ eventName ], _ctx.eventMapHandler);
-		}
+		// for(let eventName in EVENTS.interactive){
+		// 	this.ctx.canvas.addEventListener(EVENTS.interactive[ eventName ], _ctx.eventMapHandler);
+		// }
 
 	};
 

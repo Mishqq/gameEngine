@@ -1,5 +1,3 @@
-import EventManager from './EventManager';
-
 export default class EventEmitter {
 	constructor(){
 
@@ -51,6 +49,8 @@ export default class EventEmitter {
 		if(!contextObservers) return false;
 
 		let contextSubscribers = contextObservers[ eventName ];
+
+		if(!contextSubscribers) return false;
 
 		contextSubscribers.forEach( sub => sub( Object.assign({type: eventName}, data) ));
 

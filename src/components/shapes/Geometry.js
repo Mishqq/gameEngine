@@ -113,9 +113,10 @@ export default class Geometry extends baseRenderObject {
 	};
 
 
-	isPointInPath(x, y){
+	isPointInPath(x, y, callback){
 		this._checkPath = true;
 		this._eventCoordinates = {x, y};
+		this._checkedCallback = callback;
 	};
 
 	setRotationPoint( value ){
