@@ -10,11 +10,21 @@ export default class baseRenderObject extends EventEmitter {
     }
 
 
+    addChildren = children => {
+
+        children.forEach( child => this.addChild( child ) );
+
+    };
+
+
     addChild = (object, position) => {
         object.parent = this;
 
 	    position ? this.children.splice( position, 0, object ) : this.children.push( object );
+
+	    return this;
     };
+
 
     removeChild = object => {
       this.children = this.children.filter( child => object !== child );

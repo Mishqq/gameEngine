@@ -1,13 +1,23 @@
 import Geometry from './shapes/Geometry';
 import Container from './shapes/Container';
+import EventEmitter from "./utils/EventEmitter";
 
-export default class Render {
+export default class Render extends EventEmitter {
 	constructor(ctx){
+		super();
+
 		this.ctx = ctx;
 
 		this._renderingScene = undefined;
 	}
 
+
+	get eventPos(){
+		return this._eventPos;
+	}
+	set eventPos( value ){
+		this._eventPos = value;
+	}
 
 	/**
 	 *
@@ -53,8 +63,13 @@ export default class Render {
 	 * @param scene
 	 */
 	renderScene = scene => {
+		this._eventedObj = [];
 
 		this.renderObject( scene );
+
+		if(this._eventedObj.length) this.emit('clickedObjects', {data: this._eventedObj});
+		this._eventedObj.length = 0;
+		this.eventPos = null;
 
 	};
 
@@ -76,6 +91,7 @@ export default class Render {
 	 * @param rObj
 	 */
 	renderObject = rObj => {
+		let {ctx} = this;
 
 		if( rObj instanceof Geometry ){
 
@@ -83,7 +99,9 @@ export default class Render {
 
 		}
 
-		rObj.children.forEach( child => this.renderObject( child ) );
+		rObj.children.forEach( child => {
+			this.renderObject( child );
+		});
 
 	};
 
@@ -131,13 +149,18 @@ export default class Render {
 			}
 		});
 
-		if(rGeometry._checkPath){
-			let result = ctx.isPointInPath( rGeometry._eventCoordinates.x, rGeometry._eventCoordinates.y );
-			if(result) rGeometry.emit('click', {});
-			rGeometry._checkPath = false;
+		if(this.eventPos && ctx.isPointInPath( this.eventPos.x, this.eventPos.y )){
+			this._eventedObj.push( rGeometry );
 		}
 
-		ctx.restore();
+		// if(rGeometry._checkPath){
+		// 	let result = ctx.isPointInPath( rGeometry._eventCoordinates.x, rGeometry._eventCoordinates.y );
+		// 	console.log('⇒ result', result);
+		// 	// if(result) rGeometry.emit('click', {});
+		// 	rGeometry._checkedCallback( result );
+		// 	rGeometry._checkPath = false;
+		// }
 
+		ctx.restore();
 	};
 }
