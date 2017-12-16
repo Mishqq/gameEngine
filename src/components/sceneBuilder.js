@@ -2,37 +2,37 @@ import Geometry from './shapes/Geometry';
 import Container from './shapes/Container';
 
 class SceneBuilder {
-	static createElement( rootObj, descriptionObject ){
+	static createElement( parentObj, protoObj ){
 
-		if(descriptionObject.type === 'container'){
-
+		if(protoObj.type === 'container'){
 
 			let newContainer = new Container();
 
-			if(descriptionObject.name) newContainer.name = descriptionObject.name;
-			if(descriptionObject.position) newContainer.name = descriptionObject.position;
+			for(let key in protoObj)
+				if(key !== 'type' && key !== 'children')
+					newContainer[key] = protoObj[key];
 
-			rootObj.addChild( newContainer );
+			parentObj.addChild( newContainer );
 
-			if(descriptionObject.children)
-				descriptionObject.children.forEach( child => SceneBuilder.createElement(newContainer, child) )
+			if(protoObj.children)
+				protoObj.children.forEach( child => SceneBuilder.createElement(newContainer, child) )
 
 
-		} else if(descriptionObject.type === 'geometry'){
-
+		} else if(protoObj.type === 'geometry'){
 
 			let newGeometry = new Geometry();
 
-			if(descriptionObject.name) newGeometry.name = descriptionObject.name;
-			if(descriptionObject.position) newGeometry.name = descriptionObject.position;
-			if(descriptionObject.fillStyle) newGeometry.fillStyle = descriptionObject.fillStyle;
-			if(descriptionObject.alpha) newGeometry.alpha = descriptionObject.alpha;
-			if(descriptionObject.path && descriptionObject.path.length){
+			for(let key in protoObj)
+				if(key !== 'type' && key !== 'children' && key !== 'path')
+					newGeometry[key] = protoObj[key];
 
 
-			}
+			if(protoObj.path && protoObj.path.length)
+				for(let i=0; i<protoObj.path.length; i+=2)
+					newGeometry[ protoObj.path[i] ].apply( null, protoObj.path[i+1] );
 
 
+			parentObj.addChild( newGeometry );
 		}
 	}
 

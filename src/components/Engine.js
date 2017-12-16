@@ -110,4 +110,4 @@ class Engine {
     }
 }
 
-export {Engine, Container, Geometry};
+export {Engine, Scene, Container, Geometry};

@@ -15,4 +15,9 @@ export default class Event {
 		this._stopped = true;
 
 	}
+
+
+	get stopped(){
+		return this._stopped;
+	}
 }

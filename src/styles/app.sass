@@ -1,13 +1,14 @@
-body
-    canvas
-        position: absolute
-        display: block
-        top: 50%
-        left: 50%
-        margin: -300px
-
 canvas
+    display: block
     border: 1px solid #000
+
+.canvas-wrapper
+    position: absolute
+
+    .list
+        position: absolute
+        right: 10px
+        bottom: 10px
 
 .list
     padding: 0
@@ -17,20 +18,17 @@ canvas
     &__item
         display: inline-block
         vertical-align: top
+        margin: 0 5px
+        padding: 5px 15px
         position: relative
-        padding: 30px 20px
-        border: 1px solid #333
+        border: 1px solid #6660E6
+        border-radius: 3px
         font-size: 14px
         letter-spacing: normal
+        cursor: pointer
+        background-color: rgba(194, 206, 255, .25)
+        transition: all .15s ease-in
 
-        &-content
-            display: block
+        &_active
+            background-color: rgba(194, 206, 255, .75)
 
-        &-save
-            position: absolute
-            display: inline-block
-            top: 2px
-            right: 5px
-            color: cornflowerblue
-            text-decoration: none
-            cursor: pointer

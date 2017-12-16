@@ -52,7 +52,7 @@ export default class EventEmitter {
 
 		if(!contextSubscribers) return false;
 
-		contextSubscribers.forEach( sub => sub( Object.assign({type: eventName}, data) ));
+		contextSubscribers.forEach( sub => sub( Object.assign(data, {type: eventName}) ));
 
 	};
 }
