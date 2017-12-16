@@ -63,12 +63,12 @@ export default class Render extends EventEmitter {
 	 * @param scene
 	 */
 	renderScene = scene => {
-		this._eventedObj = [];
+		this._eventedObjects = [];
 
 		this.renderObject( scene );
 
-		if(this._eventedObj.length) this.emit('clickedObjects', {data: this._eventedObj});
-		this._eventedObj.length = 0;
+		if(this._eventedObjects.length) this.emit('click', {data: this._eventedObjects});
+		this._eventedObjects.length = 0;
 		this.eventPos = null;
 
 	};
@@ -150,16 +150,8 @@ export default class Render extends EventEmitter {
 		});
 
 		if(this.eventPos && ctx.isPointInPath( this.eventPos.x, this.eventPos.y )){
-			this._eventedObj.push( rGeometry );
+			this._eventedObjects.push( rGeometry );
 		}
-
-		// if(rGeometry._checkPath){
-		// 	let result = ctx.isPointInPath( rGeometry._eventCoordinates.x, rGeometry._eventCoordinates.y );
-		// 	console.log('⇒ result', result);
-		// 	// if(result) rGeometry.emit('click', {});
-		// 	rGeometry._checkedCallback( result );
-		// 	rGeometry._checkPath = false;
-		// }
 
 		ctx.restore();
 	};
