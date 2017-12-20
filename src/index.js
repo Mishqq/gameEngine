@@ -16,7 +16,7 @@ const engine = new Engine(ctx);
  */
 let sceneThree = engine.sceneBuilder.createTree( sceneTree );
 
-let graph = new Graph({pointCount: 10, pointLinkCount: 3, radius: 10, brace: 30, range: [50, 50, 400, 400]});
+let graph = new Graph({pointCount: 10, pointLinkCount: 2, radius: 10, brace: 30, range: [50, 50, 400, 400]});
 
 
 /**

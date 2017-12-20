@@ -14,7 +14,10 @@ const context2DcommandTypes = {
 	closePath: 'function',
 	fillStyle: 'setter',
 	strokeStyle: 'setter',
-	lineWidth: 'setter'
+	lineWidth: 'setter',
+	setLineDash: 'setter',
+	lineJoin: 'setter',
+	lineCap: 'setter'
 };
 
 export default class Geometry extends baseRenderObject {
@@ -94,8 +97,23 @@ export default class Geometry extends baseRenderObject {
 		return this;
 	};
 
+	setLineDash = (...args) => {
+		this._shape.push({pathCommand: 'setLineDash', args, type: context2DcommandTypes['setLineDash']});
+		return this;
+	};
+
 	strokeStyle = (...args) => {
 		this._shape.push({pathCommand: 'strokeStyle', args, type: context2DcommandTypes['strokeStyle']});
+		return this;
+	};
+
+	lineJoin = (...args) => {
+		this._shape.push({pathCommand: 'lineJoin', args, type: context2DcommandTypes['lineJoin']});
+		return this;
+	};
+
+	lineCap = (...args) => {
+		this._shape.push({pathCommand: 'lineCap', args, type: context2DcommandTypes['lineCap']});
 		return this;
 	};
 
