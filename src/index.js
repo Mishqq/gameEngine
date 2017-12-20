@@ -3,7 +3,7 @@ import './styles/app.sass';
 import {Engine, Scene, Container, Geometry} from './components/Engine';
 import {g1 as aG1, g2 as aG2, g3 as aG3} from './examples/animateRenderGeometry';
 import {g1 as sG1, g2 as sG2} from './examples/staticRenderGeometry';
-import Graph from './examples/christmasTree';
+import Graph from './examples/graph';
 import sceneTree from './examples/sceneTree';
 
 const canvas = document.querySelector('#squares');
@@ -16,7 +16,7 @@ const engine = new Engine(ctx);
  */
 let sceneThree = engine.sceneBuilder.createTree( sceneTree );
 
-let graph = new Graph({pointCount: 10, pointLinkCount: 2, radius: 10, brace: 30, range: [50, 50, 400, 400]});
+let graph = new Graph({pointCount: 30, pointLinkCount: 3, radius: 10, brace: 50, range: [50, 50, 400, 400]});
 
 
 /**
