@@ -30,6 +30,10 @@ export default class baseRenderObject extends EventEmitter {
       this.children = this.children.filter( child => object !== child );
     };
 
+	removeChildren = () => {
+		this.children.length = 0;
+	};
+
 
     get x(){
         return this._x;

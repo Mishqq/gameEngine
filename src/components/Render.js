@@ -63,12 +63,12 @@ export default class Render extends EventEmitter {
 	 * @param scene
 	 */
 	renderScene = scene => {
-		this._eventedObj = [];
+		this._eventedObjects = [];
 
 		this.renderObject( scene );
 
-		if(this._eventedObj.length) this.emit('clickedObjects', {data: this._eventedObj});
-		this._eventedObj.length = 0;
+		if(this._eventedObjects.length) this.emit('click', {data: this._eventedObjects});
+		this._eventedObjects.length = 0;
 		this.eventPos = null;
 
 	};
@@ -113,7 +113,17 @@ export default class Render extends EventEmitter {
 	renderBaseObject = baseObject => {
 		let {ctx} = this;
 
-		if(baseObject.rotate) ctx.rotate((Math.PI/180) * baseObject.rotate);
+		if(baseObject.rotate) {
+			baseObject.rotationPoint ?
+				ctx.translate(baseObject.rotationPoint.x, baseObject.rotationPoint.y) :
+				ctx.translate(baseObject.position.x, baseObject.position.y);
+
+			ctx.rotate((Math.PI/180) * baseObject.rotate);
+
+			baseObject.rotationPoint ?
+				ctx.translate(-baseObject.rotationPoint.x, -baseObject.rotationPoint.y) :
+				ctx.translate(-baseObject.position.x, -baseObject.position.y);
+		}
 		if(baseObject.alpha) ctx.globalAlpha = baseObject.alpha;
 
 	};
@@ -124,16 +134,11 @@ export default class Render extends EventEmitter {
 
 		ctx.save();
 
-		if( rGeometry.rotationPoint ) {
-			ctx.translate(rGeometry.rotationPoint.x, rGeometry.rotationPoint.y)
-		} else if( rGeometry.position ) {
-			ctx.translate(rGeometry.x, rGeometry.y);
-		} else {
-			rGeometry.position = {x: 0, y: 0};
-			ctx.translate(0, 0)
-		}
+		if(!rGeometry.position) rGeometry.position = {x: 0, y: 0};
 
 		this.renderBaseObject( rGeometry );
+
+		ctx.translate(rGeometry.position.x, rGeometry.position.y);
 
 		rGeometry.shape.forEach( ctxCommand => {
 			let {pathCommand, args, type} = ctxCommand;
@@ -149,17 +154,11 @@ export default class Render extends EventEmitter {
 			}
 		});
 
-		if(this.eventPos && ctx.isPointInPath( this.eventPos.x, this.eventPos.y )){
-			this._eventedObj.push( rGeometry );
-		}
 
-		// if(rGeometry._checkPath){
-		// 	let result = ctx.isPointInPath( rGeometry._eventCoordinates.x, rGeometry._eventCoordinates.y );
-		// 	console.log('⇒ result', result);
-		// 	// if(result) rGeometry.emit('click', {});
-		// 	rGeometry._checkedCallback( result );
-		// 	rGeometry._checkPath = false;
-		// }
+
+		if(this.eventPos && ctx.isPointInPath( this.eventPos.x, this.eventPos.y )){
+			this._eventedObjects.push( rGeometry );
+		}
 
 		ctx.restore();
 	};

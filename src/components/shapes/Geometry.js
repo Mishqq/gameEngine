@@ -14,6 +14,7 @@ const context2DcommandTypes = {
 	closePath: 'function',
 	fillStyle: 'setter',
 	strokeStyle: 'setter',
+	lineWidth: 'setter'
 };
 
 export default class Geometry extends baseRenderObject {
@@ -85,6 +86,11 @@ export default class Geometry extends baseRenderObject {
 
 	fillStyle = (...args) => {
 		this._shape.push({pathCommand: 'fillStyle', args, type: context2DcommandTypes['fillStyle']});
+		return this;
+	};
+
+	lineWidth = (...args) => {
+		this._shape.push({pathCommand: 'lineWidth', args, type: context2DcommandTypes['lineWidth']});
 		return this;
 	};
 

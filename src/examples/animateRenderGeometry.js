@@ -3,15 +3,15 @@ import Geometry from '../components/shapes/Geometry';
 let g1 = new Geometry();
 g1.interactive = true;
 g1.alpha = 0.5;
-g1.fillStyle('#B3FFFD');
-g1.rotationPoint = {x:100, y:100};
+g1.fillStyle('#45B7D6');
 g1.position = {x:100, y:100};
+g1.rotationPoint = {x:150, y:150};
 g1.drawRect( -50, -50, 100, 100 );
 
 
 let g2 = new Geometry();
 g2.interactive = true;
-g2.rotationPoint = {x:250, y:250};
+g2.position = {x:350, y:100};
 g2.alpha = 0.3;
 g2.beginPath()
 	.moveTo(25, -25)
@@ -32,7 +32,8 @@ let g3 = new Geometry();
 g3.alpha = 0.60;
 g3.fillStyle('#D245D8');
 g3.interactive = true;
-g3.rotationPoint = {x:350, y:350};
+g3.position = {x:200, y:200};
+g3.rotationPoint = {x:150, y:150};
 g3.drawRect( -50, -50, 100, 100 );
 
 

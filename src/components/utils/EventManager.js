@@ -5,22 +5,22 @@ class EventManager {
 
 	}
 
+	/**
+	 * Метод поднимает событие по дереву рендера.
+	 * @param eventProto
+	 */
+	bubbleEvent( eventProto ){
+		let {type, currentObject} = eventProto;
+		let event = new Event( type, currentObject );
 
-	createEvent( targetObject ){
+		const recurBubbling = (object, event) => {
+			object.emit( event.type, event );
 
-		return new Event( targetObject );
+			if( event.stopped || !object.parent ) return false;
 
-	}
-
-
-	bubbleEvent( targetObject, event ){
-
-		targetObject.emit( event );
-
-		if( event._stopped || !targetObject.parent ) return false;
-
-		if( targetObject.parent && targetObject.parent.interactive ) this.bubbleEvent( targetObject.parent );
-
+			if( object.parent ) recurBubbling( object.parent, event );
+		};
+		recurBubbling( currentObject, event );
 	}
 }
 
