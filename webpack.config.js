@@ -1,19 +1,19 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 let isProd = process.env.NODE_ENV === 'production';
 
 let cssDev = ['style-loader', 'css-loader', 'sass-loader'];
-let cssProd = ExtractTextPlugin.extract({
-    fallback: 'style-loader',
-    use: ['css-loader', 'sass-loader']
-});
-let cssConfig = isProd ? cssProd : cssDev;
+// let cssProd = ExtractTextPlugin.extract({
+//     fallback: 'style-loader',
+//     use: ['css-loader', 'sass-loader']
+// });
+// let cssConfig = isProd ? cssProd : cssDev;
 
 module.exports = {
-    entry: './src/index.js',
+    entry: './examples/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
         // publicPath: "/src/templates/",
@@ -27,8 +27,8 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.sass$/,
-                use: cssConfig
+                test: /\.s[ac]ss$/i,
+                use: cssDev
             },
             {
                 test: /\.js$/,
@@ -37,11 +37,7 @@ module.exports = {
             },
             {
                 test: /\.pug$/,
-                use: ['html-loader', 'pug-html-loader']
-            },
-            {
-                test: /\.(njk|nunjucks)$/,
-                loader: 'nunjucks-loader'
+                use: ['pug-loader']
             },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
@@ -74,12 +70,13 @@ module.exports = {
             // },
             hash: true,
             // filename: './../index.html',
-            template: './src/index.html'
+            template: './examples/index.pug'
         }),
-        new ExtractTextPlugin({
+        new MiniCssExtractPlugin({
             filename: "app.css",
-            disable: !isProd,
-            allChunks: true
+            chunkFilename: "app.css",
+            // disable: !isProd,
+            // allChunks: true
         })
     ]
 };

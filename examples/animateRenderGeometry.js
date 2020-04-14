@@ -1,4 +1,4 @@
-import Geometry from '../components/shapes/Geometry';
+import Geometry from '../src/shapes/Geometry';
 
 let g1 = new Geometry();
 g1.interactive = true;
