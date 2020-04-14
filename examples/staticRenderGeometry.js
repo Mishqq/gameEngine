@@ -1,4 +1,4 @@
-import Geometry from '../components/shapes/Geometry';
+import Geometry from '../src/shapes/Geometry';
 
 let squares = [];
 let colors = ['#A0D4E1', '#77E1C3', '#70E199', '#E8B092', '#E88C94', '#E87160'];
